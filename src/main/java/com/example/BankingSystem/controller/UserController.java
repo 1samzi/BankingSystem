@@ -46,8 +46,8 @@ public class UserController {
             @RequestBody UserUpdateRequestDTO dto
     ){
         User updatedUser = userService.updateUser(id, dto);
-        UserResponseDTO response = userMapper.mapUserToUserResponseDTO(updatedUser);
-        return ResponseEntity.ok(response);
+        UserResponseDTO responseDTO = userMapper.mapUserToUserResponseDTO(updatedUser);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -55,8 +55,8 @@ public class UserController {
             @PathVariable Long id
     ){
         User deletedUser = userService.deleteUserById(id);
-        UserResponseDTO response = userMapper.mapUserToUserResponseDTO(deletedUser);
-        return ResponseEntity.ok(response);
+        UserResponseDTO responseDTO = userMapper.mapUserToUserResponseDTO(deletedUser);
+        return ResponseEntity.ok(responseDTO);
 
     }
 

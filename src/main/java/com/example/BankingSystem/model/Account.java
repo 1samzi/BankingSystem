@@ -38,6 +38,7 @@ public class Account {
 
     @Getter
     @Setter
+    @Enumerated(EnumType.STRING)
     private AccountType accountType;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)

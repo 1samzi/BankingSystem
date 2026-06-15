@@ -9,6 +9,12 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
 
+    private final AccountMapper accountMapper;
+
+    public UserMapper(AccountMapper accountMapper) {
+        this.accountMapper = accountMapper;
+    }
+
     public User mapUserRequestDTOtoUser(UserCreateRequestDTO dto){
         User user = new User();
         user.setEmail(dto.getEmail());
@@ -17,7 +23,7 @@ public class UserMapper {
 
     public UserResponseDTO mapUserToUserResponseDTO(User user){
         UserResponseDTO dto = new UserResponseDTO();
-        dto.setAccounts(user.getAccounts().stream().toList());
+        dto.setAccounts(user.getAccounts().stream().map(accountMapper::mapAccountToResponseDTO).toList());
         dto.setId(user.getUserId());
         dto.setEmail(user.getEmail());
 

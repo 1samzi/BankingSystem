@@ -7,5 +7,5 @@ import lombok.Setter;
 @Getter
 public class UserUpdateRequestDTO {
     private String email;
-    //TODO: future for password?
+    //TODO: future for password, need Bcrypt
 }

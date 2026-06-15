@@ -28,6 +28,7 @@ public class UserService {
 
     //TODO: optional add batch creation
 
+    //TODO: Write this function lol
     public User deleteUserById(Long id) {
         return null;
     }

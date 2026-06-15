@@ -7,20 +7,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AccountMapper {
-    public AccountResponseDTO accountMapperToResponseDTO(Account account) {
+    public AccountResponseDTO mapAccountToResponseDTO(Account account) {
         AccountResponseDTO dto = new AccountResponseDTO();
         dto.setId((account.getAccountId()));
         dto.setUser(account.getUser());
         dto.setBalance(account.getBalance());
         dto.setAccountType(account.getAccountType());
-        dto.setName(dto.getName());
+        dto.setName(account.getName());
         return dto;
     }
-    public Account accountMapperToAccount(AccountCreateRequestDTO dto){
+    public Account mapAccountDTOToAccount(AccountCreateRequestDTO dto){
         Account account = new Account();
 
         account.setAccountType(dto.getAccountType());
-        account.setUser(dto.getUser());
         account.setName(dto.getName());
         account.setBalance(dto.getBalance());
         //TODO : once transactions are ready
