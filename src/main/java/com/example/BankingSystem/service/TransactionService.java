@@ -1,14 +1,18 @@
 package com.example.BankingSystem.service;
 
 import com.example.BankingSystem.dto.TransactionCreateRequestDTO;
+import com.example.BankingSystem.dto.TransactionResponseDTO;
 import com.example.BankingSystem.mapper.TransactionMapper;
 import com.example.BankingSystem.model.Account;
 import com.example.BankingSystem.model.Transaction;
 import com.example.BankingSystem.repository.AccountRepository;
 import com.example.BankingSystem.repository.TransactionRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -21,11 +25,11 @@ public class TransactionService {
         this.transactionMapper = mapper;
         this.accountRepository = accountRepository;
     }
-
+    @Transactional
     public Transaction saveTransaction (TransactionCreateRequestDTO dto){
         Transaction transaction = transactionMapper.mapTransactionDTOToTransaction(dto);
         Account account = accountRepository.findById(dto.getAccountId())
-                .orElseThrow(() -> new RuntimeException("Cannot find associated user to save transaction. (Account ID:" + dto.getAccountId() + ")"));
+                .orElseThrow(() -> new EntityNotFoundException("Cannot find associated user to save transaction. (Account ID:" + dto.getAccountId() + ")"));
 
         BigDecimal amount = transaction.getAmount();
         BigDecimal balance = account.getBalance();
@@ -55,5 +59,21 @@ public class TransactionService {
         accountRepository.save(account);
         //Create new transaction record
         return repo.save(transaction);
+    }
+
+    public TransactionResponseDTO getTransaction(Long id){
+        Transaction transaction = repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Transaction not found for GET request. (ID: " + id + ")"));
+        return transactionMapper.mapTransactionToResponseDTO(transaction);
+    }
+
+    public List<TransactionResponseDTO> getTransactions(){
+        List<Transaction> transactions = repo.findAll();
+        return transactions.stream().map(transactionMapper::mapTransactionToResponseDTO).toList();
+    }
+
+    public List<TransactionResponseDTO> getTransactionsByAccountId(Long accountId){
+        List<Transaction> transactions = repo.findByAccountAccountId(accountId);
+        return transactions.stream().map(transactionMapper::mapTransactionToResponseDTO).toList();
     }
 }

@@ -20,7 +20,7 @@ export default function TransactionsPage({ accounts, transactions, selectedAccou
         }}>
           <option value="all">All accounts</option>
           {accounts.map((account) => (
-            <option key={account.accountId} value={account.accountId}>
+            <option key={account.id} value={account.id}>
               {account.name}
             </option>
           ))}

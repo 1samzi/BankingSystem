@@ -5,8 +5,8 @@ import { formatMoney } from '../utils/formatters.js';
 
 export default function HomePage({ accounts, transactions, onCreateAccount, onOpenAccount, onOpenTransactions }) {
   const totalBalance = accounts.reduce((total, account) => total + account.balance, 0);
-  const deposits = transactions.filter((transaction) => transaction.amount > 0).length;
-  const withdrawals = transactions.filter((transaction) => transaction.amount < 0).length;
+  const deposits = transactions.filter((transaction) => transaction.transactionType === 'DEPOSIT').length;
+  const withdrawals = transactions.filter((transaction) => transaction.transactionType === 'WITHDRAWAL').length;
 
   return (
     <div className="dashboard-grid">
@@ -28,9 +28,13 @@ export default function HomePage({ accounts, transactions, onCreateAccount, onOp
         </div>
 
         <div className="account-list">
-          {accounts.map((account) => (
-            <AccountCard account={account} key={account.accountId} onOpen={onOpenAccount} />
-          ))}
+          {accounts.length > 0 ? (
+            accounts.map((account) => (
+              <AccountCard account={account} key={account.id} onOpen={onOpenAccount} />
+            ))
+          ) : (
+            <p className="empty-state">No accounts yet. Create one to start tracking balances.</p>
+          )}
         </div>
       </section>
 

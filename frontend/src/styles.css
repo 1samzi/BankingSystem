@@ -297,6 +297,17 @@ button {
   color: var(--danger);
 }
 
+.form-error,
+.empty-state {
+  margin: 0;
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.empty-state {
+  color: var(--text-muted);
+}
+
 .account-detail {
   align-self: start;
 }

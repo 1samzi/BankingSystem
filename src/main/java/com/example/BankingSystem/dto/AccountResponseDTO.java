@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 @Getter
 public class AccountResponseDTO {
     private Long id;
+    private String accountNumber;
     private User user;
     private BigDecimal balance;
     private String name;

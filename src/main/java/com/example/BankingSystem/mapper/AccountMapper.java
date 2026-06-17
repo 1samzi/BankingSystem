@@ -3,6 +3,7 @@ package com.example.BankingSystem.mapper;
 import com.example.BankingSystem.dto.AccountCreateRequestDTO;
 import com.example.BankingSystem.dto.AccountResponseDTO;
 import com.example.BankingSystem.model.Account;
+import com.example.BankingSystem.util.AccountNumberGenerator;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -10,6 +11,7 @@ public class AccountMapper {
     public AccountResponseDTO mapAccountToResponseDTO(Account account) {
         AccountResponseDTO dto = new AccountResponseDTO();
         dto.setId((account.getAccountId()));
+        dto.setAccountNumber(AccountNumberGenerator.generate(account.getAccountId()));
         dto.setUser(account.getUser());
         dto.setBalance(account.getBalance());
         dto.setAccountType(account.getAccountType());

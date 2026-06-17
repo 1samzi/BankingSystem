@@ -6,11 +6,12 @@ import com.example.BankingSystem.dto.AccountUpdateRequestDTO;
 import com.example.BankingSystem.mapper.AccountMapper;
 import com.example.BankingSystem.model.Account;
 import com.example.BankingSystem.service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(originPatterns = {"http://localhost:*", "http://127.0.0.1:*"})
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -24,7 +25,7 @@ public class AccountController {
 
     @PostMapping
     public Account createAccount(
-            @RequestBody AccountCreateRequestDTO dto){
+            @Valid @RequestBody AccountCreateRequestDTO dto){
         return accountService.saveAccount(dto);
     }
 
@@ -40,10 +41,17 @@ public class AccountController {
         return accountService.getAccounts();
     }
 
+    @GetMapping("/user/{userId}")
+    public List<AccountResponseDTO> getAccountsByUserId(
+            @PathVariable Long userId
+    ){
+        return accountService.getAccountsByUserId(userId);
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<AccountResponseDTO> updateAccount(
             @PathVariable Long id,
-            AccountUpdateRequestDTO dto
+            @Valid @RequestBody AccountUpdateRequestDTO dto
     ) {
         Account account = accountService.updateAccount(id, dto);
         AccountResponseDTO responseDTO = accountMapper.mapAccountToResponseDTO(account);

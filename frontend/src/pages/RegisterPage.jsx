@@ -1,29 +1,35 @@
 import AuthLayout from '../components/AuthLayout.jsx';
 
-export default function RegisterPage({ onLogin, onRegister }) {
+export default function RegisterPage({ error, isSubmitting, onLogin, onRegister }) {
   return (
     <AuthLayout title="Create Account" subtitle="Start with a profile, then connect banking logic when your backend is ready.">
       <form className="auth-form" onSubmit={(event) => {
         event.preventDefault();
-        onRegister();
+
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get('email');
+
+        onRegister({ email });
       }}>
         <label>
           Name
-          <input autoComplete="name" placeholder="Sam" type="text" />
+          <input autoComplete="name" name="name" placeholder="Sam" type="text" />
         </label>
 
         <label>
           Email
-          <input autoComplete="email" placeholder="sam@example.com" type="email" />
+          <input autoComplete="email" name="email" placeholder="sam@example.com" required type="email" />
         </label>
 
         <label>
           Password
-          <input autoComplete="new-password" type="password" />
+          <input autoComplete="new-password" name="password" type="password" />
         </label>
 
-        <button className="primary-button full-width" type="submit">
-          Register
+        {error && <p className="form-error">{error}</p>}
+
+        <button className="primary-button full-width" disabled={isSubmitting} type="submit">
+          {isSubmitting ? 'Registering...' : 'Register'}
         </button>
 
         <button className="link-button" onClick={onLogin} type="button">

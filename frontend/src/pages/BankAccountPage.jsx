@@ -1,11 +1,11 @@
 import TransactionList from '../components/TransactionList.jsx';
-import { formatMoney } from '../utils/formatters.js';
+import { formatEnumLabel, formatMoney } from '../utils/formatters.js';
 
-export default function BankAccountPage({ account, transactions, onEdit, onTransactions }) {
+export default function BankAccountPage({ account, transactions, onDeposit, onWithdraw, onEdit, onTransactions }) {
   return (
     <div className="page-grid">
       <section className="content-section account-detail">
-        <p className="eyebrow">{account.type}</p>
+        <p className="eyebrow">{formatEnumLabel(account.accountType)}</p>
         <h2>{account.name}</h2>
         <span>{account.accountNumber}</span>
 
@@ -15,10 +15,24 @@ export default function BankAccountPage({ account, transactions, onEdit, onTrans
         </div>
 
         <div className="button-row">
-          <button className="primary-button" type="button">
+          <button className="primary-button"
+            type="button"
+            onClick={() => {
+              const amount = prompt('Deposit amount');
+              if (amount) {
+                onDeposit(amount);
+              }
+            }}>
             Deposit
           </button>
-          <button className="secondary-button" type="button">
+          <button className="secondary-button"
+            type="button"
+            onClick={() => {
+              const amount = prompt('Withdraw amount');
+              if (amount) {
+                onWithdraw(amount);
+              }
+            }}>
             Withdraw
           </button>
           <button className="secondary-button" onClick={onEdit} type="button">

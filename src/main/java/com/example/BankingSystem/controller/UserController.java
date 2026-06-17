@@ -6,11 +6,12 @@ import com.example.BankingSystem.dto.UserUpdateRequestDTO;
 import com.example.BankingSystem.mapper.UserMapper;
 import com.example.BankingSystem.model.User;
 import com.example.BankingSystem.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@CrossOrigin(originPatterns = {"http://localhost:*", "http://127.0.0.1:*"})
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -24,8 +25,8 @@ public class UserController {
 
     @PostMapping
     public User createUser(
-            @RequestBody UserCreateRequestDTO user){
-        return userService.saveUser(user);
+            @Valid @RequestBody UserCreateRequestDTO dto){
+        return userService.saveUser(dto);
     }
 
     @GetMapping("/{id}")
@@ -43,7 +44,7 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDTO> updateUser(
             @PathVariable Long id,
-            @RequestBody UserUpdateRequestDTO dto
+            @Valid @RequestBody UserUpdateRequestDTO dto
     ){
         User updatedUser = userService.updateUser(id, dto);
         UserResponseDTO responseDTO = userMapper.mapUserToUserResponseDTO(updatedUser);
