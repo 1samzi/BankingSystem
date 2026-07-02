@@ -13,7 +13,7 @@ export default function TransactionList({ transactions, limit }) {
           <article className="transaction-row" key={`${transaction.accountId}-${transaction.transactionType}-${transaction.amount}-${index}`}>
             <div>
               <strong>{formatEnumLabel(transaction.transactionType)}</strong>
-              <span>Account #{transaction.accountId}</span>
+              <span>Account #{transaction.accountNumber}</span>
             </div>
             <div className="transaction-meta">
               <strong className={isDeposit ? 'positive' : 'negative'}>

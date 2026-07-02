@@ -4,7 +4,7 @@ import com.example.BankingSystem.dto.TransactionCreateRequestDTO;
 import com.example.BankingSystem.dto.TransactionResponseDTO;
 import com.example.BankingSystem.model.Transaction;
 import org.springframework.stereotype.Component;
-
+import com.example.BankingSystem.util.AccountNumberGenerator;
 @Component
 public class TransactionMapper {
     public TransactionResponseDTO mapTransactionToResponseDTO(Transaction transaction){
@@ -12,6 +12,7 @@ public class TransactionMapper {
         dto.setTransactionType(transaction.getTransactionType());
         dto.setAmount(transaction.getAmount());
         dto.setAccountId(transaction.getAccount().getAccountId());
+        dto.setAccountNumber(AccountNumberGenerator.generate(transaction.getAccount().getAccountId()));
         return dto;
     }
 

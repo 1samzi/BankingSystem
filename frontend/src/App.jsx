@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { createAccount, getAccountsByUserId } from './api/accounts.js';
-import { createUser } from './api/users.js';
+import { createUser, getUserByEmail } from './api/users.js';
 import AppShell from './components/AppShell.jsx';
 import { accounts as mockAccounts, profile, transactions as mockTransactions } from './data/mockData.js';
 import BankAccountPage from './pages/BankAccountPage.jsx';
@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import TransactionsPage from './pages/TransactionsPage.jsx';
-import {getTransactionsByAccountId, createTransaction} from "./api/tranactions.js";
+import {getTransactionsByAccountId, createTransaction} from "./api/transactions.js";
 
 const protectedPages = ['home', 'transactions', 'account', 'editAccount'];
 
@@ -34,7 +34,7 @@ export default function App() {
       () => selectedAccount
           ? transactions.filter((transaction) => transaction.accountId === selectedAccount.id)
           : [],
-      [selectedAccount]
+      [selectedAccount, transactions]
   );
 
   const activeProfile = currentUser
@@ -50,9 +50,28 @@ export default function App() {
     setCurrentPage(page);
   }
 
-  function handleLogin() {
-    setIsSignedIn(true);
-    setCurrentPage('home');
+  async function handleLogin({email}){
+    try {
+      setAuthError('');
+      const user = await getUserByEmail(email);
+      const userId = user.id ?? user.userId;
+      const userAccounts = await getAccountsByUserId(userId);
+
+      const accountTransactions = await Promise.all(
+          userAccounts.map((account) => getTransactionsByAccountId(account.id))
+      );
+
+      const allTransactions = accountTransactions.flat();
+
+      setCurrentUser(user);
+      setAccounts(userAccounts);
+      setSelectedAccountId(userAccounts[0]?.id ?? null);
+      setTransactions(allTransactions);
+      setIsSignedIn(true);
+      setCurrentPage('home');
+    } catch (error){
+      setAuthError(error.message || 'No user was found with that email.');
+    }
   }
 
   function handleLogout() {
@@ -78,6 +97,7 @@ export default function App() {
       setAccounts(userAccounts);
       setSelectedAccountId(userAccounts[0]?.id ?? null);
       setIsSignedIn(true);
+      setTransactions([]);
       setCurrentPage('home');
     } catch (error) {
       setAuthError(error.message || 'Registration failed. Make sure the backend is running and the email is not already used.');
@@ -116,23 +136,22 @@ export default function App() {
     }
   }
 
-  async function handleCreateTransaction(transactionType, amount) {
-    if (!selectedAccount) {
-      return;
-    }
-
+  async function handleCreateTransaction(accountId, transactionType, amount) {
     await createTransaction({
-      accountId: selectedAccount.id,
+      accountId,
       transactionType,
       amount: Number(amount),
     });
 
     const userId = currentUser.id ?? currentUser.userId;
     const updatedAccounts = await getAccountsByUserId(userId);
-    const updatedTransactions = await getTransactionsByAccountId(selectedAccount.id);
+
+    const accountTransactions = await Promise.all(
+        updatedAccounts.map((account) => getTransactionsByAccountId(account.id))
+    );
 
     setAccounts(updatedAccounts);
-    setTransactions(updatedTransactions);
+    setTransactions(accountTransactions.flat());
   }
 
   async function openAccount(accountId) {
@@ -156,7 +175,7 @@ export default function App() {
   }
 
   if (!isSignedIn) {
-    return <LoginPage onLogin={handleLogin} onRegister={() => navigate('register')}/>;
+    return <LoginPage error={authError} onLogin={handleLogin} onRegister={() => navigate('register')}/>;
   }
 
   return (
@@ -173,6 +192,8 @@ export default function App() {
                 onOpenAccount={openAccount}
                 onOpenTransactions={() => navigate('transactions')}
                 onCreateAccount={openNewAccountForm}
+                onDeposit={(accountId, amount) => handleCreateTransaction(accountId, 'DEPOSIT', amount)}
+                onWithdraw={(accountId, amount) => handleCreateTransaction(accountId, 'WITHDRAWAL', amount)}
             />
         )}
 
@@ -189,8 +210,8 @@ export default function App() {
             <BankAccountPage
                 account={selectedAccount}
                 transactions={accountTransactions}
-                onDeposit={(amount) => handleCreateTransaction('DEPOSIT', amount)}
-                onWithdraw={(amount) => handleCreateTransaction('WITHDRAWAL', amount)}
+                onDeposit={(amount) => handleCreateTransaction(selectedAccount.id, 'DEPOSIT', amount)}
+                onWithdraw={(amount) => handleCreateTransaction(selectedAccount.id, 'WITHDRAWAL', amount)}
                 onEdit={() => navigate('editAccount')}
                 onTransactions={() => navigate('transactions')}
             />

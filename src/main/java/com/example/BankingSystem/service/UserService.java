@@ -56,4 +56,11 @@ public class UserService {
         }
         return repo.save(userToUpdate);
     }
+
+    public UserResponseDTO getUserByEmail(String email) {
+        User user = repo.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException("User not found for email: " + email));
+
+        return userMapper.mapUserToUserResponseDTO(user);
+    }
 }

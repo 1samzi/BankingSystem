@@ -47,7 +47,6 @@ public class AccountController {
     ){
         return accountService.getAccountsByUserId(userId);
     }
-
     @PatchMapping("/{id}")
     public ResponseEntity<AccountResponseDTO> updateAccount(
             @PathVariable Long id,

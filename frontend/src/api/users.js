@@ -6,3 +6,7 @@ export function createUser(data) {
     body: JSON.stringify(data),
   });
 }
+
+export function getUserByEmail(email) {
+  return apiRequest(`/users/email/${encodeURIComponent(email)}`);
+}

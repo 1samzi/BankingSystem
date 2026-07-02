@@ -9,5 +9,6 @@ public class TransactionResponseDTO {
     private Long accountId;
     private TransactionType transactionType;
     private BigDecimal amount;
+    private String accountNumber;
 }
 
