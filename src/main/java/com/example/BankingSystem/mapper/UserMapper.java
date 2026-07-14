@@ -18,6 +18,7 @@ public class UserMapper {
     public User mapUserRequestDTOtoUser(UserCreateRequestDTO dto){
         User user = new User();
         user.setEmail(dto.getEmail());
+        user.setPasswordHash(dto.getPassword());
         return user;
     }
 

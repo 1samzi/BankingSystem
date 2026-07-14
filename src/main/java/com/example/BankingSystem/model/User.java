@@ -26,7 +26,9 @@ public class User {
     @Column (nullable = false, unique = true)
     private String email;
 
-    // Password hashes are stores as strings
+
+    @Getter
+    @Setter
     @Column(name = "password_hash", nullable = true, length = 255)
     private String passwordHash;
 

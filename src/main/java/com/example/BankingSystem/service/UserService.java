@@ -7,8 +7,8 @@ import com.example.BankingSystem.mapper.UserMapper;
 import com.example.BankingSystem.model.User;
 import com.example.BankingSystem.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 
@@ -16,14 +16,18 @@ import java.util.List;
 public class UserService {
     private final UserRepository repo;
     private final UserMapper userMapper;
-
-    public UserService(UserRepository repository, UserMapper userMapper){
+    private final PasswordEncoder passwordEncoder;
+    public UserService(UserRepository repository, UserMapper userMapper, PasswordEncoder passwordEncoder){
         this.repo = repository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     public User saveUser(UserCreateRequestDTO dto){
         User user = userMapper.mapUserRequestDTOtoUser(dto);
+        String secureHash = passwordEncoder.encode(dto.getPassword());
+        user.setPasswordHash(secureHash);
         return repo.save(user);
     }
 

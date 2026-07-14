@@ -2,6 +2,7 @@ package com.example.BankingSystem.controller;
 
 import com.example.BankingSystem.dto.TransactionCreateRequestDTO;
 import com.example.BankingSystem.dto.TransactionResponseDTO;
+import com.example.BankingSystem.mapper.TransactionMapper;
 import com.example.BankingSystem.model.Transaction;
 import com.example.BankingSystem.service.TransactionService;
 import jakarta.validation.Valid;
@@ -13,16 +14,18 @@ import java.util.List;
 @RequestMapping("/transactions")
 public class TransactionController {
     private final TransactionService transactionService;
+    private final TransactionMapper transactionMapper;
 
-    public TransactionController(TransactionService transactionService){
+    public TransactionController(TransactionService transactionService, TransactionMapper transactionMapper){
         this.transactionService = transactionService;
+        this.transactionMapper = transactionMapper;
     }
 
     @PostMapping
-    public Transaction createTransaction(
+    public TransactionResponseDTO createTransaction(
             @Valid @RequestBody TransactionCreateRequestDTO dto
     ){
-        return transactionService.saveTransaction(dto);
+        return transactionMapper.mapTransactionToResponseDTO(transactionService.saveTransaction(dto));
     }
 
     @GetMapping("/{id}")

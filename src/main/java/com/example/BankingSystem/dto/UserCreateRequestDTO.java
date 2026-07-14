@@ -11,4 +11,6 @@ public class UserCreateRequestDTO {
     @NotBlank
     @Email
     private String email;
+
+    private String password;
 }
