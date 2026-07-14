@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { createAccount, getAccountsByUserId } from './api/accounts.js';
-import { createUser, getUserByEmail } from './api/users.js';
+import { createUser, loginUser } from './api/users.js';
 import AppShell from './components/AppShell.jsx';
 import { accounts as mockAccounts, profile, transactions as mockTransactions } from './data/mockData.js';
 import BankAccountPage from './pages/BankAccountPage.jsx';
@@ -50,10 +50,10 @@ export default function App() {
     setCurrentPage(page);
   }
 
-  async function handleLogin({email}){
+  async function handleLogin({email, password}){
     try {
       setAuthError('');
-      const user = await getUserByEmail(email);
+      const user = await loginUser({email, password});
       const userId = user.id ?? user.userId;
       const userAccounts = await getAccountsByUserId(userId);
 

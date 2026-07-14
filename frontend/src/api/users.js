@@ -10,3 +10,10 @@ export function createUser(data) {
 export function getUserByEmail(email) {
   return apiRequest(`/users/email/${encodeURIComponent(email)}`);
 }
+
+export function loginUser(data){
+  return apiRequest ('/auth/login', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}

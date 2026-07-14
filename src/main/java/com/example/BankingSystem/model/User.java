@@ -29,7 +29,7 @@ public class User {
 
     @Getter
     @Setter
-    @Column(name = "password_hash", nullable = true, length = 255)
+    @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
 
     @Getter

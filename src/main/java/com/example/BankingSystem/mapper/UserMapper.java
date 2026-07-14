@@ -1,5 +1,7 @@
 package com.example.BankingSystem.mapper;
 
+import com.example.BankingSystem.dto.AuthResponseDTO;
+import com.example.BankingSystem.dto.LoginRequestDTO;
 import com.example.BankingSystem.dto.UserCreateRequestDTO;
 import com.example.BankingSystem.dto.UserResponseDTO;
 import com.example.BankingSystem.model.User;

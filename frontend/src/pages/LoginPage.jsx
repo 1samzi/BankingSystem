@@ -8,8 +8,9 @@ export default function LoginPage({ error, onLogin, onRegister }) {
 
         const formData = new FormData(event.currentTarget);
         const email = formData.get('email');
+        const password = formData.get('password')
 
-        onLogin({ email });
+        onLogin({ email, password });
       }}>
         <label>
           Email
@@ -18,7 +19,7 @@ export default function LoginPage({ error, onLogin, onRegister }) {
 
         <label>
           Password
-          <input autoComplete="current-password" defaultValue="password" type="password" />
+          <input autoComplete="current-password" defaultValue="password" type="password" name = "password" />
         </label>
         {error && <p className="form-error">{error}</p>}
         <button className="primary-button full-width" type="submit">

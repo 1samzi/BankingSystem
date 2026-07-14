@@ -8,8 +8,8 @@ export default function RegisterPage({ error, isSubmitting, onLogin, onRegister 
 
         const formData = new FormData(event.currentTarget);
         const email = formData.get('email');
-
-        onRegister({ email });
+        const password = formData.get('password');
+        onRegister({ email, password });
       }}>
         <label>
           Name
